@@ -38,6 +38,7 @@ public class Function {
 
     private static final String KEY_VAULT_URL = System.getenv("KEY_VAULT_URL");
     private static final String KEK_NAME = System.getenv("KEK_NAME");
+    private static final String MI_CLIENT_ID = System.getenv("UAMI_CLIENT_ID");
     private static final String SECRET_NAME = "wrapped-dek";
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -46,7 +47,7 @@ public class Function {
             @HttpTrigger(
                 name = "req",
                 methods = {HttpMethod.POST},
-                authLevel = AuthorizationLevel.ANONYMOUS)
+                authLevel = AuthorizationLevel.FUNCTION)
                 HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
@@ -65,7 +66,9 @@ public class Function {
             new SecureRandom().nextBytes(dek);
 
             // 2. Setup Key and Secret clients
-            var credential = new DefaultAzureCredentialBuilder().build();
+            var credential = new DefaultAzureCredentialBuilder()
+                    .managedIdentityClientId(MI_CLIENT_ID)
+                    .build();
 
             KeyClient keyClient = new KeyClientBuilder()
                     .vaultUrl(KEY_VAULT_URL)

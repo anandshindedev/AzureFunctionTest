@@ -1,10 +1,13 @@
 package com.demo;
 
 import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.security.keyvault.keys.KeyClient;
+import com.azure.security.keyvault.keys.KeyClientBuilder;
 import com.azure.security.keyvault.keys.cryptography.CryptographyClient;
 import com.azure.security.keyvault.keys.cryptography.CryptographyClientBuilder;
 import com.azure.security.keyvault.keys.cryptography.models.KeyWrapAlgorithm;
 import com.azure.security.keyvault.keys.cryptography.models.WrapResult;
+import com.azure.security.keyvault.keys.models.KeyVaultKey;
 import com.azure.security.keyvault.secrets.SecretClient;
 import com.azure.security.keyvault.secrets.SecretClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,8 +67,18 @@ public class Function {
             // 2. Setup Key and Secret clients
             var credential = new DefaultAzureCredentialBuilder().build();
 
+            KeyClient keyClient = new KeyClientBuilder()
+                    .vaultUrl(KEY_VAULT_URL)
+                    .credential(credential)
+                    .buildClient();
+
+            KeyVaultKey key = keyClient.getKey(KEK_NAME);
+            String keyIdWithVersion = key.getId();
+
+            context.getLogger().info("Azure Function: keyIdWithVersion : " + keyIdWithVersion);
+
             CryptographyClient cryptoClient = new CryptographyClientBuilder()
-                    .keyIdentifier(KEY_VAULT_URL + "/keys/" + KEK_NAME)
+                    .keyIdentifier(keyIdWithVersion)
                     .credential(credential)
                     .buildClient();
 
@@ -74,9 +87,13 @@ public class Function {
                     .credential(credential)
                     .buildClient();
 
+            context.getLogger().info("Azure Function: credentials created");
+
             // 3. Wrap DEK using KEK
             WrapResult wrapResult = cryptoClient.wrapKey(KeyWrapAlgorithm.RSA_OAEP_256, dek);
             String wrappedDekBase64 = Base64.getEncoder().encodeToString(wrapResult.getEncryptedKey());
+
+            context.getLogger().info("Azure Function: key wrapped");
 
             // 4. Build payload
             Map<String, Object> payload = new HashMap<>();

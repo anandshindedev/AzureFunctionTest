@@ -56,7 +56,7 @@ public class Function {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @FunctionName("generateDek")
-    public HttpResponseMessage run(
+    public HttpResponseMessage generateDek(
             @HttpTrigger(
                 name = "req",
                 methods = {HttpMethod.POST},
@@ -140,7 +140,7 @@ public class Function {
     }
 
     @FunctionName("kekRotationDekRewrap")
-    public void run(@EventGridTrigger(name = "event") String eventJson, final ExecutionContext context) {
+    public void kekRotationDekRewrap(@EventGridTrigger(name = "event") String eventJson, final ExecutionContext context) {
         try {
 
             JsonNode root = mapper.readTree(eventJson);

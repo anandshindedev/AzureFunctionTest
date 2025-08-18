@@ -144,9 +144,10 @@ public class Function {
         try {
 
             JsonNode root = mapper.readTree(eventJson);
+            context.getLogger().info("Received Event Data: " + root);
             String eventType = root.path("eventType").asText();
 
-            context.getLogger().info("Received Event: " + eventType);
+            context.getLogger().info("Received Event Type: " + eventType);
             if (!"Microsoft.KeyVault.KeyNewVersionCreated".equals(eventType)) {
                 context.getLogger().info("Ignoring non-KeyNewVersionCreated event");
                 return;

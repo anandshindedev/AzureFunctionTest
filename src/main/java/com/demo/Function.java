@@ -153,7 +153,7 @@ public class Function {
                 return;
             }
 
-            String latestKekId = root.path("data").path("key").path("kid").asText();
+            String latestKekId = root.path("data").path("Id").asText();
             context.getLogger().info("Latest KEK ID: " + latestKekId);
 
             var credential = new DefaultAzureCredentialBuilder()

@@ -15,10 +15,10 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * Unit test for Function class.
+ * Unit test for GenerateDek class.
  */
 @Disabled("Disabled until proper mocking is added")
-public class FunctionTest {
+public class GenerateDekTest {
     /**
      * Unit test for HttpTriggerJava method.
      */
@@ -47,7 +47,7 @@ public class FunctionTest {
         doReturn(Logger.getGlobal()).when(context).getLogger();
 
         // Invoke
-        final HttpResponseMessage ret = new Function().generateDek(req, context);
+        final HttpResponseMessage ret = new GenerateDek().generateDek(req, context);
 
         // Verify
         assertEquals(HttpStatus.OK, ret.getStatus());

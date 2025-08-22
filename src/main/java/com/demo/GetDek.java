@@ -28,7 +28,7 @@ public class GetDek {
     public HttpResponseMessage getDek(
             @HttpTrigger(
                     name = "req",
-                    methods = {HttpMethod.POST},
+                    methods = {HttpMethod.GET},
                     authLevel = AuthorizationLevel.FUNCTION)
             HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
@@ -46,6 +46,17 @@ public class GetDek {
             JsonNode payload = mapper.readTree(secret.getValue());
             String wrappedDekBase64 = payload.path("wrappedDek").asText();
             String kekId = payload.path("kekId").asText();
+
+            String shouldYouBeGettingThisKey = request.getQueryParameters().getOrDefault("shouldYouBeGettingThisKey", "");
+            boolean pass = shouldYouBeGettingThisKey.equals("Yes");
+            if(!pass) {
+                return request.createResponseBuilder(HttpStatus.OK)
+                        .body(Map.of(
+                                "message", "DEK retrieved successfully",
+                                "dek: ", wrappedDekBase64,
+                                "kekId", kekId))
+                        .build();
+            }
 
             CryptographyClient oldCrypto = new CryptographyClientBuilder()
                     .keyIdentifier(kekId)

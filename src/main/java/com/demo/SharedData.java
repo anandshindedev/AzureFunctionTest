@@ -9,6 +9,7 @@ public class SharedData {
     public static final String MI_CLIENT_ID = System.getenv("UAMI_CLIENT_ID");
     public static final String SECRET_NAME = System.getenv("SECRET_NAME");
     public static final String STORAGE_CONNECTION_STRING = System.getenv("AzureWebJobsStorage");
+    public static final String STORAGE_URL = System.getenv("STORAGE_URL");
     public static final String LOCK_CONTAINER = System.getenv("LOCK_CONTAINER");
     public static final String LOCK_BLOB = System.getenv("LOCK_BLOB");
     public static final int LEASE_RETRY_COUNT = 3;
@@ -37,6 +38,9 @@ public class SharedData {
         }
         if (LOCK_BLOB == null || LOCK_BLOB.isBlank()) {
             missing.add("LOCK_BLOB");
+        }
+        if (STORAGE_URL == null || STORAGE_URL.isBlank()) {
+            missing.add("STORAGE_URL");
         }
 
         return missing;

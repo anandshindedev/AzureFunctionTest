@@ -62,7 +62,8 @@ public class KekRotationDekRewrap {
 
             // Acquire blob lease for distributed locking
             BlobContainerClient containerClient = new BlobContainerClientBuilder()
-                    .connectionString(STORAGE_CONNECTION_STRING)
+                    .endpoint(STORAGE_URL)
+                    .credential(credential)
                     .containerName(LOCK_CONTAINER)
                     .buildClient();
             BlobClient blobClient = containerClient.getBlobClient(LOCK_BLOB);

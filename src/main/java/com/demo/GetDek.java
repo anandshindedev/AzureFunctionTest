@@ -48,7 +48,7 @@ public class GetDek {
             String kekId = payload.path("kekId").asText();
 
             String shouldYouBeGettingThisKey = request.getQueryParameters().getOrDefault("shouldYouBeGettingThisKey", "");
-            boolean pass = shouldYouBeGettingThisKey.equals("Yes");
+            boolean pass = shouldYouBeGettingThisKey.equalsIgnoreCase("yes");
             if(!pass) {
                 return request.createResponseBuilder(HttpStatus.OK)
                         .body(Map.of(

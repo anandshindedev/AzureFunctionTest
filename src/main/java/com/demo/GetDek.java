@@ -47,9 +47,7 @@ public class GetDek {
             String wrappedDekBase64 = payload.path("wrappedDek").asText();
             String kekId = payload.path("kekId").asText();
 
-            String shouldYouBeGettingThisKey = request.getQueryParameters().getOrDefault("shouldYouBeGettingThisKey", "");
-            boolean pass = shouldYouBeGettingThisKey.equalsIgnoreCase("yes");
-            if(!pass) {
+            if(!request.getQueryParameters().getOrDefault("shouldYouBeGettingThisKey", "").equalsIgnoreCase("yes")) {
                 return request.createResponseBuilder(HttpStatus.OK)
                         .body(Map.of(
                                 "message", "DEK retrieved successfully",
